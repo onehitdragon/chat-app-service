@@ -1,8 +1,5 @@
-interface StandardResponse{
+interface StandardResponse<TBody = any>{
     status: "success" | "error" | "missing" | "system error" | "not authorized",
-    msg?: string
-}
-
-interface StandardResponseWithBody<TBody> extends StandardResponse{
+    msg?: string,
     content?: TBody
 }

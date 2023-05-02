@@ -5,7 +5,8 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>>{
     declare id: CreationOptional<string>;
     declare username: string;
     declare password: string;
-    declare token: CreationOptional<string>;
+    declare role: CreationOptional<"admin" | "user">;
+    declare token: null | CreationOptional<string>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 }
@@ -21,6 +22,10 @@ User.init({
         unique: true
     },
     password: DataTypes.STRING,
+    role: {
+        type: DataTypes.ENUM("admin", "user"),
+        defaultValue: "user"
+    },
     token: DataTypes.STRING,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE

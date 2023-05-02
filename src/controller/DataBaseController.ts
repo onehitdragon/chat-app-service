@@ -4,7 +4,15 @@ import User from "../model/User";
 
 class DataBaseController{
     public async reCreate(req: Request, res: Response<StandardResponse>){
-        await db.sync({ force: true });
+        try{
+            await db.sync({ force: true });
+        }
+        catch(err){
+            return res.status(500).json({
+                status: "system error",
+                msg: "Recreation fail"
+            });
+        }
 
         return res.json({
             status: "success",
@@ -38,8 +46,8 @@ class DataBaseController{
             ])
         }
         catch(err){
-            return res.json({
-                status: "error",
+            return res.status(500).json({
+                status: "system error",
                 msg: "Init fail"
             });
         }
