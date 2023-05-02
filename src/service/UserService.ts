@@ -46,6 +46,15 @@ class UserService{
 
         return user ? user.get() : null
     }
+
+    public static async createUser(user: Pick<UserDTO, "username" | "password">): Promise<UserDTO>{
+        const createdUser = await User.create({
+            username: user.username,
+            password: user.password
+        });
+
+        return createdUser.get();
+    }
 }
 
 export default UserService;

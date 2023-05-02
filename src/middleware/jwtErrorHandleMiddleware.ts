@@ -4,12 +4,8 @@ import { StandardResponse } from "../controller";
 
 export const jwtErrorHandleMiddleware = 
 (async (err: UnauthorizedError, req: Request, res: Response<StandardResponse>, next: NextFunction) => {
-    if(err.code){
-        return res.status(401).json({
-            status: "not authorized",
-            msg: err.message
-        });
-    }
-
-    next();
+    return res.status(401).json({
+        status: "not authorized",
+        msg: err.message
+    });
 }) as ErrorRequestHandler
