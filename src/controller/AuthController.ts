@@ -3,6 +3,7 @@ import z from "zod";
 import UserService from "../service/UserService";
 import { UserDTO } from "../dto";
 import AuthService from "../service/AuthService";
+import { StandardResponse } from ".";
 
 const loginBodySchema = z.object({
     username: z.string(),
@@ -37,9 +38,13 @@ class AuthController{
             });
         }
 
-        const token = AuthService.newToken(user);
+        const token = AuthService.newToken({
+            id: user.id,
+            username: user.username,
+            role: user.role
+        });
         try{
-            UserService.updateUserWithToken(user.id, token);
+            UserService.updateWithToken(user.id, token);
         }
         catch(err){
             return res.status(500).json({

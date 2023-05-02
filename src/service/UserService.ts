@@ -3,7 +3,7 @@ import User from "../model/User";
 import { UserDTO } from "../dto";
 
 class UserService{
-    public static async findByUsernameAndPassword(username: string, password: string){
+    public static async findByUsernameAndPassword(username: string, password: string): Promise<UserDTO | null>{
         const user = await User.findOne({
             where: {
                 [Op.and]: [
@@ -17,12 +17,12 @@ class UserService{
             }
         });
 
-        return user ? user.get() as UserDTO : null;
+        return user ? user.get() : null;
     }
 
-    public static updateUserWithToken(id: string, token: string): Promise<boolean>;
-    public static updateUserWithToken(id: UserDTO, token: string): Promise<boolean>;
-    public static async updateUserWithToken(id: string | UserDTO, token: string){
+    public static updateWithToken(id: string, token: string): Promise<boolean>;
+    public static updateWithToken(id: UserDTO, token: string): Promise<boolean>;
+    public static async updateWithToken(id: string | UserDTO, token: string){
         const user = await User.update(
             {
                 token: token
@@ -35,6 +35,16 @@ class UserService{
         )
 
         return user[0] > 0;
+    }
+
+    public static async findByToken(token: string): Promise<UserDTO | null>{
+        const user = await User.findOne({
+            where: {
+                token: token
+            }
+        })
+
+        return user ? user.get() : null
     }
 }
 

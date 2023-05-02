@@ -1,11 +1,19 @@
 import db from "../database/db";
 import { Request, Response } from "express";
 import User from "../model/User";
+import { StandardResponse } from ".";
 
 class DataBaseController{
     public async reCreate(req: Request, res: Response<StandardResponse>){
         try{
             await db.sync({ force: true });
+            await User.create(
+                {
+                    username: "admin",
+                    password: "admin",
+                    role: "admin"
+                }
+            );
         }
         catch(err){
             return res.status(500).json({
@@ -23,10 +31,6 @@ class DataBaseController{
     public async init(req: Request, res: Response<StandardResponse>){
         try{
             await User.bulkCreate([
-                {
-                    username: "admin",
-                    password: "admin"
-                },
                 {
                     username: "a",
                     password: "a"

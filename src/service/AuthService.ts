@@ -1,13 +1,17 @@
 import jwt from "jsonwebtoken";
-import { UserDTO } from "../dto";
+import { AuthPayload } from "../controller";
 
 class AuthService{
-    public static newToken<TPayload extends Pick<UserDTO, "id" | "username" | "role">>(payload: TPayload){
+    public static newToken(payload: AuthPayload){
         return jwt.sign(
             payload,
             process.env.SECRET_KEY || "",
             {
-                expiresIn: "60000"
+                expiresIn: "60000",
+                header: {
+                    alg: "HS256",
+                    typ: "JWT"
+                }
             }
         )
     }
