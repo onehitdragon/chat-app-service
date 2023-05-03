@@ -1,9 +1,10 @@
 import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import db from "../database/db";
+import User from "./User";
 
 class PlayerData extends Model<InferAttributes<PlayerData>, InferCreationAttributes<PlayerData>>{
     declare id: CreationOptional<number>;
-    declare userId: ForeignKey<string>;
+    declare userId: ForeignKey<User["id"]>;
     declare gold: CreationOptional<number>;
     declare match: CreationOptional<number>;
     declare createdAt: CreationOptional<Date>;

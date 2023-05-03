@@ -14,10 +14,10 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>>{
     declare token: null | CreationOptional<string>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
-    declare createPlayerDatum: HasOneCreateAssociationMixin<PlayerData>;
-    declare getPlayerDatum: HasOneGetAssociationMixin<PlayerData>;
-    declare setPlayerDatum: HasOneSetAssociationMixin<PlayerData, "userId">;
-    declare playerDatum?: NonAttribute<PlayerData>
+    declare createPlayerData: HasOneCreateAssociationMixin<PlayerData>;
+    declare getPlayerData: HasOneGetAssociationMixin<PlayerData>;
+    declare setPlayerData: HasOneSetAssociationMixin<PlayerData, number>;
+    declare PlayerData?: NonAttribute<PlayerData>
 }
 
 User.init({
@@ -46,7 +46,8 @@ User.init({
 User.hasOne(PlayerData, {
     foreignKey: {
         name: "userId"
-    }
+    },
+    as: "PlayerData"
 });
 
 export default User;

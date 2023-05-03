@@ -2,6 +2,7 @@ import db from "../database/db";
 import { Request, Response } from "express";
 import User from "../model/User";
 import { StandardResponse } from ".";
+import PlayerData from "../model/PlayerData";
 
 class DataBaseController{
     public async reCreate(req: Request, res: Response<StandardResponse>){
@@ -14,9 +15,7 @@ class DataBaseController{
                     role: "admin"
                 },
             );
-            await user.createPlayerDatum({
-                userId: user.id
-            });
+            await user.createPlayerData();
         }
         catch(err){
             console.log(err);
@@ -34,7 +33,7 @@ class DataBaseController{
 
     public async init(req: Request, res: Response<StandardResponse>){
         try{
-            await User.bulkCreate([
+            const users = await User.bulkCreate([
                 {
                     username: "a",
                     password: "a"
@@ -51,7 +50,10 @@ class DataBaseController{
                     username: "d",
                     password: "d"
                 }
-            ])
+            ]);
+            users.forEach((user) => {
+                user.createPlayerData();
+            })
         }
         catch(err){
             return res.status(500).json({
