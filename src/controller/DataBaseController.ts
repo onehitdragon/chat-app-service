@@ -7,15 +7,19 @@ class DataBaseController{
     public async reCreate(req: Request, res: Response<StandardResponse>){
         try{
             await db.sync({ force: true });
-            await User.create(
+            const user = await User.create(
                 {
                     username: "admin",
                     password: "admin",
                     role: "admin"
-                }
+                },
             );
+            await user.createPlayerDatum({
+                userId: user.id
+            });
         }
         catch(err){
+            console.log(err);
             return res.status(500).json({
                 status: "system error",
                 msg: "Recreation fail"

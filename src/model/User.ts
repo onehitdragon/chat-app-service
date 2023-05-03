@@ -1,5 +1,10 @@
-import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from "sequelize";
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, 
+    HasOneCreateAssociationMixin, 
+    HasOneGetAssociationMixin,
+    HasOneSetAssociationMixin,
+    NonAttribute} from "sequelize";
 import db from "../database/db";
+import PlayerData from "./PlayerData";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>>{
     declare id: CreationOptional<string>;
@@ -9,6 +14,10 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>>{
     declare token: null | CreationOptional<string>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
+    declare createPlayerDatum: HasOneCreateAssociationMixin<PlayerData>;
+    declare getPlayerDatum: HasOneGetAssociationMixin<PlayerData>;
+    declare setPlayerDatum: HasOneSetAssociationMixin<PlayerData, "userId">;
+    declare playerDatum?: NonAttribute<PlayerData>
 }
 
 User.init({
@@ -32,6 +41,12 @@ User.init({
 }, {
     sequelize: db,
     tableName: "Users",
+});
+
+User.hasOne(PlayerData, {
+    foreignKey: {
+        name: "userId"
+    }
 });
 
 export default User;
