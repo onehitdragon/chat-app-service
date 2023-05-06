@@ -7,4 +7,4 @@ interface StandardResponse<TBody = any>{
     content?: TBody
 }
 
-interface AuthPayload extends Pick<UserDTO, "id" | "username" | "role">{}
+interface AuthPayload extends Pick<UserDTO, "id" | "email" | "role">{}

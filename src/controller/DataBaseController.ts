@@ -2,7 +2,7 @@ import db from "../database/db";
 import { Request, Response } from "express";
 import User from "../model/User";
 import { StandardResponse } from ".";
-import PlayerData from "../model/PlayerData";
+import Conversation from "../model/Conversation";
 
 class DataBaseController{
     public async reCreate(req: Request, res: Response<StandardResponse>){
@@ -10,12 +10,20 @@ class DataBaseController{
             await db.sync({ force: true });
             const user = await User.create(
                 {
-                    username: "admin",
-                    password: "admin",
+                    email: "admin@gmail.com",
+                    password: "12345",
+                    firstName: "admin",
+                    lastName: "admin",
+                    birthDay: new Date(),
+                    phone: "08754654674",
                     role: "admin"
-                },
+                }
             );
-            await user.createPlayerData();
+            const conversation = await Conversation.create({
+                title: "Conversation 1",
+                creatorId: user.id
+            });
+            await user.addConversation(conversation);
         }
         catch(err){
             console.log(err);
@@ -35,25 +43,46 @@ class DataBaseController{
         try{
             const users = await User.bulkCreate([
                 {
-                    username: "a",
-                    password: "a"
+                    email: "A@gmail.com",
+                    password: "12345",
+                    firstName: "A",
+                    lastName: "Nguyễn",
+                    birthDay: new Date(),
+                    phone: "08754654674"
                 },
                 {
-                    username: "b",
-                    password: "b"
+                    email: "B@gmail.com",
+                    password: "12345",
+                    firstName: "B",
+                    lastName: "Trần",
+                    birthDay: new Date(),
+                    phone: "08754654674"
                 },
                 {
-                    username: "c",
-                    password: "c"
+                    email: "C@gmail.com",
+                    password: "12345",
+                    firstName: "C",
+                    lastName: "Hồng",
+                    birthDay: new Date(),
+                    phone: "08754654674"
                 },
                 {
-                    username: "d",
-                    password: "d"
+                    email: "E@gmail.com",
+                    password: "12345",
+                    firstName: "E",
+                    lastName: "Đại",
+                    birthDay: new Date(),
+                    phone: "08754654674"
                 }
             ]);
-            users.forEach((user) => {
-                user.createPlayerData();
-            })
+            await Conversation.create({
+                title: "Conversation 2",
+                creatorId: users[0].id
+            });
+            await Conversation.create({
+                title: "Conversation 3",
+                creatorId: users[1].id
+            });
         }
         catch(err){
             return res.status(500).json({

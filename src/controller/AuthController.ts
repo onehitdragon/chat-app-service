@@ -7,12 +7,17 @@ import { StandardResponse } from ".";
 import { UniqueConstraintError } from "sequelize";
 
 const loginBodySchema = z.object({
-    username: z.string(),
+    email: z.string(),
     password: z.string()
+
 });
 const registerBodySchema = z.object({
-    username: z.string(),
-    password: z.string()
+    email: z.string(),
+    password: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+    birthDay: z.coerce.date(),
+    phone: z.string()
 });
 
 class AuthController{
@@ -21,14 +26,15 @@ class AuthController{
         if(!validate.success){
             return res.status(400).json({
                 status: "missing",
-                msg: "You are missing some field"
+                msg: "You are missing some field",
+                content: validate.error
             });
         }
         const body = validate.data;
 
         let user: UserDTO | null;
         try{
-            user = await UserService.findByUsernameAndPassword(body.username, body.password);
+            user = await UserService.findByEmailAndPassword(body.email, body.password);
         }
         catch(err){
             return res.status(500).json({
@@ -45,7 +51,7 @@ class AuthController{
 
         const token = AuthService.newToken({
             id: user.id,
-            username: user.username,
+            email: user.email,
             role: user.role
         });
         try{
@@ -71,23 +77,21 @@ class AuthController{
         if(!validate.success){
             return res.status(400).json({
                 status: "missing",
-                msg: "You are missing some field"
+                msg: "You are missing some field",
+                content: validate.error
             });
         }
         const body = validate.data;
 
         let user: UserDTO | null;
         try{
-            user = await UserService.createUser({
-                username: body.username,
-                password: body.password
-            });
+            user = await UserService.createUser(body);
         }
         catch(err){
             if(err instanceof UniqueConstraintError){
                 return res.status(400).json({
                     status: "error",
-                    msg: `${body.username} is existed`
+                    msg: `${body.email} is existed`
                 });
             }
             return res.status(500).json({
@@ -98,9 +102,7 @@ class AuthController{
         return res.json({
             status: "success",
             content: {
-                user: {
-                    username: user.username
-                }
+                user: body
             }
         });
     }

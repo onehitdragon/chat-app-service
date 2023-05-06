@@ -1,23 +1,22 @@
-import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, 
-    HasOneCreateAssociationMixin, 
-    HasOneGetAssociationMixin,
-    HasOneSetAssociationMixin,
-    NonAttribute} from "sequelize";
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, HasManyAddAssociationMixin
+    } from "sequelize";
 import db from "../database/db";
-import PlayerData from "./PlayerData";
+import Conversation from "./Conversation";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>>{
     declare id: CreationOptional<string>;
-    declare username: string;
+    declare email: string;
     declare password: string;
+    declare firstName: string;
+    declare lastName: string;
+    declare birthDay: Date;
+    declare phone: string;
     declare role: CreationOptional<"admin" | "user">;
     declare token: null | CreationOptional<string>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
-    declare createPlayerData: HasOneCreateAssociationMixin<PlayerData>;
-    declare getPlayerData: HasOneGetAssociationMixin<PlayerData>;
-    declare setPlayerData: HasOneSetAssociationMixin<PlayerData, number>;
-    declare PlayerData?: NonAttribute<PlayerData>
+
+    declare addConversation: HasManyAddAssociationMixin<Conversation, String>;
 }
 
 User.init({
@@ -26,11 +25,15 @@ User.init({
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    username: {
+    email: {
         type: DataTypes.STRING,
         unique: true
     },
     password: DataTypes.STRING,
+    firstName: DataTypes.STRING,
+    lastName: DataTypes.STRING,
+    birthDay: DataTypes.DATE,
+    phone: DataTypes.STRING,
     role: {
         type: DataTypes.ENUM("admin", "user"),
         defaultValue: "user"
@@ -43,11 +46,11 @@ User.init({
     tableName: "Users",
 });
 
-User.hasOne(PlayerData, {
-    foreignKey: {
-        name: "userId"
-    },
-    as: "PlayerData"
-});
+User.hasMany(
+    Conversation,
+    {
+        foreignKey: "creatorId"
+    }
+)
 
 export default User;

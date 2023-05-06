@@ -3,12 +3,12 @@ import User from "../model/User";
 import { UserDTO } from "../dto";
 
 class UserService{
-    public static async findByUsernameAndPassword(username: string, password: string): Promise<UserDTO | null>{
+    public static async findByEmailAndPassword(email: string, password: string): Promise<UserDTO | null>{
         const user = await User.findOne({
             where: {
                 [Op.and]: [
                     {
-                        username: username
+                        email: email
                     },
                     {
                         password: password
@@ -47,10 +47,14 @@ class UserService{
         return user ? user.get() : null
     }
 
-    public static async createUser(user: Pick<UserDTO, "username" | "password">): Promise<UserDTO>{
+    public static async createUser(user: Pick<UserDTO, "email" | "password" | "firstName" | "lastName" | "birthDay" | "phone">): Promise<UserDTO>{
         const createdUser = await User.create({
-            username: user.username,
-            password: user.password
+            email: user.email,
+            password:  user.password,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            birthDay: user.birthDay,
+            phone: user.phone
         });
 
         return createdUser.get();
