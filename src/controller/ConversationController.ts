@@ -70,8 +70,7 @@ class ConversationController{
                     });
                 }
                 return res.status(500).json({
-                    status: "system error",
-                    content: err
+                    status: "system error"
                 });
             }
         }
@@ -82,8 +81,7 @@ class ConversationController{
         }
         catch(err){
             return res.status(500).json({
-                status: "system error",
-                content: err
+                status: "system error"
             });
         }
 
@@ -95,6 +93,23 @@ class ConversationController{
             }
         });
     }
+
+    // public async getAllBySelf(req: JWTRequest<AuthPayload>, res: Response<StandardResponse>){
+    //     if(!req.auth){
+    //         return res.status(401).json({
+    //             status: "not authorized"
+    //         });
+    //     }
+
+    //     try{
+            
+    //     }
+    //     catch(err){
+    //         return res.status(500).json({
+    //             status: "system error"
+    //         });
+    //     }
+    // }
 }
 
 export default ConversationController;

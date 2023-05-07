@@ -4,16 +4,16 @@ import db from "../database/db";
 import User from "./User";
 
 class Conversation extends Model<InferAttributes<Conversation>, InferCreationAttributes<Conversation>>{
-    declare id: CreationOptional<String>;
-    declare title: String;
-    declare creatorId: ForeignKey<String>;
+    declare id: CreationOptional<string>;
+    declare title: string;
+    declare creatorId: ForeignKey<string>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 
     declare createCreator: HasOneCreateAssociationMixin<User>;
     declare getCreator: HasOneGetAssociationMixin<User>;
-    declare setCreator: HasOneSetAssociationMixin<User, String>;
-    declare addParticipatedUser: HasManyAddAssociationMixin<User, String>;
+    declare setCreator: HasOneSetAssociationMixin<User, string>;
+    declare addParticipatedUser: HasManyAddAssociationMixin<User, string>;
     declare getParticipatedUsers: HasManyGetAssociationsMixin<User>;
 }
 

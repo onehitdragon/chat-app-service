@@ -4,6 +4,9 @@ import User from "../model/User";
 import { StandardResponse } from ".";
 import Conversation from "../model/Conversation";
 import Participant from "../model/Participant";
+import Message from "../model/Message";
+
+console.log(Message);
 
 class DataBaseController{
     public async reCreate(req: Request, res: Response<StandardResponse>){
@@ -28,8 +31,11 @@ class DataBaseController{
                 userId: user.id,
                 conversationId: conversation.id
             });
-
-            console.log(Object.getPrototypeOf(conversation));
+            await Message.create({
+                senderId: user.id,
+                content: "I am admin",
+                conversationId: conversation.id
+            });
         }
         catch(err){
             console.log(err);
@@ -81,14 +87,18 @@ class DataBaseController{
                     phone: "08754654674"
                 }
             ]);
-            await Conversation.create({
+            const conversation2 = await Conversation.create({
                 title: "Conversation 2",
                 creatorId: users[0].id
             });
-            await Conversation.create({
+            const conversation3 = await Conversation.create({
                 title: "Conversation 3",
                 creatorId: users[1].id
             });
+            await conversation2.addParticipatedUser(users[0]);
+            await conversation2.addParticipatedUser(users[1]);
+            await conversation3.addParticipatedUser(users[0]);
+            await conversation3.addParticipatedUser(users[2]);
         }
         catch(err){
             return res.status(500).json({

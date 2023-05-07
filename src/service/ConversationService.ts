@@ -25,7 +25,7 @@ class ConversationService{
         return conversationMapped.get();
     }
 
-    public static async getParticipantsById(conversationId: String): Promise<ParticipantInfoDTO[] | null>{
+    public static async getParticipantsById(conversationId: string): Promise<ParticipantInfoDTO[] | null>{
         const conversation = await Conversation.findOne({
             where: {
                 id: conversationId
@@ -63,6 +63,18 @@ class ConversationService{
                 Participant: undefined
             }
         });
+    }
+
+    public static async findsByUserId(userId: string): Promise<ConversationDTO[]>{
+        const conversations = await Conversation.findAll({
+            where: {
+                creatorId: userId
+            }
+        });
+
+        return conversations.map((conversation) => {
+            return conversation.get();
+        })
     }
 }
 

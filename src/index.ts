@@ -20,16 +20,16 @@ server.listen(12345, () => {
 // middleware
 server.use(cors());
 server.use(express.json());
-server.use(
-    expressjwt({
-        secret: process.env.SECRET_KEY || "",
-        algorithms: ["HS256"]
-    }).unless({
-        path: [/^\/api\/v1\/auth\/[a-z]+$/]
-    }),
-    jwtErrorHandleMiddleware,
-    jwtSuccessHandleMiddleware
-);
+// server.use(
+//     expressjwt({
+//         secret: process.env.SECRET_KEY || "",
+//         algorithms: ["HS256"]
+//     }).unless({
+//         path: [/^\/api\/v1\/auth\/[a-z]+$/]
+//     }),
+//     jwtErrorHandleMiddleware,
+//     jwtSuccessHandleMiddleware
+// );
 
 // route
 server.use("/api/v1/db", databaseRouter);
