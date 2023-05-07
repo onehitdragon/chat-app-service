@@ -3,5 +3,7 @@ import User from "../model/User";
 import Conversation from "../model/Conversation";
 
 interface UserDTO extends InferAttributes<User>{};
-interface UserInfoDTO extends Pick<UserDTO, "id" | "email" | "firstName" | "lastName" | "birthDay" | "phone" | "role">{};
+interface UserInfoDTO extends Omit<UserDTO, "password" | "token">{};
 interface ConversationDTO extends InferAttributes<Conversation>{};
+interface ConversationCreationDTO extends Pick<ConversationDTO, "title" | "creatorId">{}
+interface ParticipantInfoDTO extends Omit<UserDTO, "password" | "token" | "phone" | "email">{};

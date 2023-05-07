@@ -4,7 +4,7 @@ import { Handler, NextFunction, Response } from "express";
 import AuthService from "../service/AuthService";
 
 export const jwtSuccessHandleMiddleware: Handler = 
-async (req: JWTReqeust<AuthPayload | undefined>, res: Response<StandardResponse>, next: NextFunction) => {
+async (req: JWTReqeust<AuthPayload>, res: Response<StandardResponse>, next: NextFunction) => {
     if(!req.auth || !req.headers.authorization){
         return next();
     }

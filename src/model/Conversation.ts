@@ -1,4 +1,5 @@
-import { CreationOptional, DataTypes, ForeignKey, HasManyAddAssociationMixin, HasOneCreateAssociationMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, HasManyAddAssociationMixin, HasManyGetAssociationsMixin, HasOneCreateAssociationMixin, HasOneGetAssociationMixin, HasOneSetAssociationMixin,
+    InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import db from "../database/db";
 import User from "./User";
 
@@ -13,6 +14,7 @@ class Conversation extends Model<InferAttributes<Conversation>, InferCreationAtt
     declare getCreator: HasOneGetAssociationMixin<User>;
     declare setCreator: HasOneSetAssociationMixin<User, String>;
     declare addParticipatedUser: HasManyAddAssociationMixin<User, String>;
+    declare getParticipatedUsers: HasManyGetAssociationsMixin<User>;
 }
 
 Conversation.init({

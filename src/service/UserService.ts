@@ -40,7 +40,7 @@ class UserService{
     public static async findById(id: string): Promise<UserInfoDTO | null>{
         const user = await User.findOne({
             attributes: {
-                exclude: ["password", "token", "createdAt", "updatedAt"]
+                exclude: ["password", "token"]
             },
             where: {
                 id: id
@@ -62,17 +62,6 @@ class UserService{
 
         return createdUser.get();
     }
-
-    // public static async getInfo(token: string): Promise<UserDTO | null>{
-    //     const user = await User.findOne({
-            
-    //         where: {
-    //             token: token
-    //         }
-    //     })
-
-    //     return user ? user.get() : null
-    // }
 }
 
 export default UserService;

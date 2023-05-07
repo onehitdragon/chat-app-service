@@ -1,4 +1,3 @@
-import { Request } from "express";
 import { UserDTO } from "../dto";
 
 interface StandardResponse<TBody = any>{

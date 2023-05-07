@@ -9,6 +9,7 @@ import { isAdmin } from "./middleware/authMiddleware";
 import { jwtErrorHandleMiddleware } from "./middleware/jwtErrorHandleMiddleware";
 import { jwtSuccessHandleMiddleware } from "./middleware/jwtSuccessHandleMiddleware";
 import userRouter from "./router/userRouter";
+import conversationRouter from "./router/conversationRouter";
 
 const server = express();
 
@@ -22,8 +23,7 @@ server.use(express.json());
 server.use(
     expressjwt({
         secret: process.env.SECRET_KEY || "",
-        algorithms: ["HS256"],
-        credentialsRequired: false
+        algorithms: ["HS256"]
     }).unless({
         path: [/^\/api\/v1\/auth\/[a-z]+$/]
     }),
@@ -35,3 +35,4 @@ server.use(
 server.use("/api/v1/db", databaseRouter);
 server.use("/api/v1/auth", authRouter);
 server.use("/api/v1/user", userRouter);
+server.use("/api/v1/conversation", conversationRouter);
