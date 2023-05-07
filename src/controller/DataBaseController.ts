@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import User from "../model/User";
 import { StandardResponse } from ".";
 import Conversation from "../model/Conversation";
+import Participant from "../model/Participant";
 
 class DataBaseController{
     public async reCreate(req: Request, res: Response<StandardResponse>){
@@ -23,7 +24,12 @@ class DataBaseController{
                 title: "Conversation 1",
                 creatorId: user.id
             });
-            await user.addConversation(conversation);
+            await Participant.create({
+                userId: user.id,
+                conversationId: conversation.id
+            });
+
+            console.log(Object.getPrototypeOf(conversation));
         }
         catch(err){
             console.log(err);

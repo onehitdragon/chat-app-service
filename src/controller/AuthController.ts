@@ -85,7 +85,7 @@ class AuthController{
 
         let user: UserDTO | null;
         try{
-            user = await UserService.createUser(body);
+            user = await UserService.create(body);
         }
         catch(err){
             if(err instanceof UniqueConstraintError){

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { AuthPayload } from "../controller";
+import User from "../model/User";
 
 class AuthService{
     public static newToken(payload: AuthPayload){
@@ -14,6 +15,19 @@ class AuthService{
                 }
             }
         )
+    }
+
+    public static async tokenIsExist(token: string): Promise<boolean>{
+        const user = await User.findOne({
+            attributes: {
+                include: ["id"]
+            },
+            where: {
+                token: token
+            }
+        });
+
+        return user !== null;
     }
 }
 

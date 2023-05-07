@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import User from "../model/User";
-import { UserDTO } from "../dto";
+import { UserDTO, UserInfoDTO } from "../dto";
 
 class UserService{
     public static async findByEmailAndPassword(email: string, password: string): Promise<UserDTO | null>{
@@ -37,17 +37,20 @@ class UserService{
         return user[0] > 0;
     }
 
-    public static async findByToken(token: string): Promise<UserDTO | null>{
+    public static async findById(id: string): Promise<UserInfoDTO | null>{
         const user = await User.findOne({
+            attributes: {
+                exclude: ["password", "token", "createdAt", "updatedAt"]
+            },
             where: {
-                token: token
+                id: id
             }
-        })
+        });
 
-        return user ? user.get() : null
+        return user ? user.get() : null;
     }
 
-    public static async createUser(user: Pick<UserDTO, "email" | "password" | "firstName" | "lastName" | "birthDay" | "phone">): Promise<UserDTO>{
+    public static async create(user: Pick<UserDTO, "email" | "password" | "firstName" | "lastName" | "birthDay" | "phone">): Promise<UserDTO>{
         const createdUser = await User.create({
             email: user.email,
             password:  user.password,
@@ -59,6 +62,17 @@ class UserService{
 
         return createdUser.get();
     }
+
+    // public static async getInfo(token: string): Promise<UserDTO | null>{
+    //     const user = await User.findOne({
+            
+    //         where: {
+    //             token: token
+    //         }
+    //     })
+
+    //     return user ? user.get() : null
+    // }
 }
 
 export default UserService;

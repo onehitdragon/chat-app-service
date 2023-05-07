@@ -1,7 +1,6 @@
 import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, HasManyAddAssociationMixin
     } from "sequelize";
 import db from "../database/db";
-import Conversation from "./Conversation";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>>{
     declare id: CreationOptional<string>;
@@ -15,8 +14,6 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>>{
     declare token: null | CreationOptional<string>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
-
-    declare addConversation: HasManyAddAssociationMixin<Conversation, String>;
 }
 
 User.init({
@@ -46,11 +43,6 @@ User.init({
     tableName: "Users",
 });
 
-User.hasMany(
-    Conversation,
-    {
-        foreignKey: "creatorId"
-    }
-)
+
 
 export default User;
