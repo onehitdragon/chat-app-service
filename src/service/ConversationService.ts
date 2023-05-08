@@ -3,6 +3,7 @@ import { ConversationCreationDTO, ConversationDTO, UserDTO, ParticipantInfoDTO, 
 import Conversation from "../model/Conversation";
 import Participant from "../model/Participant";
 import User from "../model/User";
+import Message from "../model/Message";
 
 class ConversationService{
     public static async create(conversation: ConversationCreationDTO): Promise<ConversationDTO>{
@@ -43,6 +44,12 @@ class ConversationService{
                     through: {
                         attributes: []
                     }
+                },
+                {
+                    model: Message,
+                    attributes: {
+                        exclude: ["conversationId"]
+                    }
                 }
             ]
         });
@@ -53,7 +60,8 @@ class ConversationService{
             createdAt: conversation.createdAt,
             updatedAt: conversation.updatedAt,
             Creator: conversation.Creator,
-            ParticipatedUsers: conversation.ParticipatedUsers
+            ParticipatedUsers: conversation.ParticipatedUsers,
+            Messages: conversation.Messages
         }
     }
 
@@ -84,6 +92,12 @@ class ConversationService{
                     through: {
                         attributes: []
                     }
+                },
+                {
+                    model: Message,
+                    attributes: {
+                        exclude: ["conversationId"]
+                    }
                 }
             ]
         });
@@ -95,7 +109,8 @@ class ConversationService{
                 createdAt: conversation.createdAt,
                 updatedAt: conversation.updatedAt,
                 Creator: conversation.Creator,
-                ParticipatedUsers: conversation.ParticipatedUsers
+                ParticipatedUsers: conversation.ParticipatedUsers,
+                Messages: conversation.Messages
             }
         })
     }

@@ -1,6 +1,7 @@
 import { InferAttributes } from "sequelize";
 import User from "../model/User";
 import Conversation from "../model/Conversation";
+import Message from "../model/Message";
 
 interface UserDTO extends InferAttributes<User>{};
 interface UserInfoDTO extends Omit<UserDTO, "password" | "token">{};
@@ -11,5 +12,9 @@ interface ConversationCreationDTO extends Pick<ConversationDTO, "title" | "creat
 interface ParticipantInfoDTO extends Pick<UserDTO, "id" | "firstName" | "lastName" | "birthDay" | "role">{};
 interface ConversationDetailDTO extends ConversationInfoDTO{
     Creator: ParticipantInfoDTO,
-    ParticipatedUsers: ParticipantInfoDTO[]
+    ParticipatedUsers: ParticipantInfoDTO[],
+    Messages: MessageInfoDTO[]
 }
+
+interface MessageDTO extends InferAttributes<Message>{};
+interface MessageInfoDTO extends Omit<MessageDTO, "conversationId">{};
