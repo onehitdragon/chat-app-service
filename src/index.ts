@@ -10,6 +10,7 @@ import { jwtErrorHandleMiddleware } from "./middleware/jwtErrorHandleMiddleware"
 import { jwtSuccessHandleMiddleware } from "./middleware/jwtSuccessHandleMiddleware";
 import userRouter from "./router/userRouter";
 import conversationRouter from "./router/conversationRouter";
+import messageRouter from "./router/messageRouter";
 
 const server = express();
 
@@ -20,12 +21,13 @@ server.listen(12345, () => {
 // middleware
 server.use(cors());
 server.use(express.json());
+server.use("/uploads", express.static("uploads"));
 server.use(
     expressjwt({
         secret: process.env.SECRET_KEY || "",
         algorithms: ["HS256"]
     }).unless({
-        path: [/^\/api\/v1\/auth\/[a-z]+$/]
+        path: [/^\/api\/v1\/auth\/[a-z]+$/, "/uploads"]
     }),
     jwtErrorHandleMiddleware,
     jwtSuccessHandleMiddleware
@@ -36,3 +38,4 @@ server.use("/api/v1/db", databaseRouter);
 server.use("/api/v1/auth", authRouter);
 server.use("/api/v1/user", userRouter);
 server.use("/api/v1/conversation", conversationRouter);
+server.use("/api/v1/message", messageRouter);

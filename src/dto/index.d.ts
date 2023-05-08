@@ -18,3 +18,4 @@ interface ConversationDetailDTO extends ConversationInfoDTO{
 
 interface MessageDTO extends InferAttributes<Message>{};
 interface MessageInfoDTO extends Omit<MessageDTO, "conversationId">{};
+interface MessageCreationDTO extends Pick<MessageDTO, "content" | "type" | "attachmentUrl" | "senderId" | "conversationId">{};

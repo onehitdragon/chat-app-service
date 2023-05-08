@@ -88,7 +88,7 @@ class ConversationController{
         return res.json({
             status: "success",
             content: {
-                createdConversation: conversationDetail
+                conversation: conversationDetail
             }
         });
     }
@@ -112,8 +112,7 @@ class ConversationController{
         }
         catch(err){
             return res.status(500).json({
-                status: "system error",
-                content: err
+                status: "system error"
             });
         }
     }

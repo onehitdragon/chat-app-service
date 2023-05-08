@@ -6,8 +6,6 @@ import Conversation from "../model/Conversation";
 import Participant from "../model/Participant";
 import Message from "../model/Message";
 
-console.log(Message);
-
 class DataBaseController{
     public async reCreate(req: Request, res: Response<StandardResponse>){
         try{
