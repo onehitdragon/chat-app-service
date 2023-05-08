@@ -4,7 +4,7 @@ import { AuthPayload, StandardResponse } from ".";
 import ConversationService from "../service/ConversationService";
 import { z } from "zod";
 import { ForeignKeyConstraintError } from "sequelize";
-import { ConversationDTO, ParticipantInfoDTO } from "../dto";
+import { ConversationDTO, ConversationDetailDTO, ParticipantInfoDTO } from "../dto";
 
 const createConversationBodySchema = z.object({
     title: z.string(),
@@ -37,7 +37,7 @@ class ConversationController{
                 title: body.title,
                 creatorId: req.auth.id
             });
-            conversation = await ConversationService.addParticipant(
+            await ConversationService.addParticipant(
                 conversation,
                 req.auth.id
             );
@@ -57,7 +57,7 @@ class ConversationController{
 
         for(const participantId of body.participantIds){
             try{
-                conversation = await ConversationService.addParticipant(
+                await ConversationService.addParticipant(
                     conversation,
                     participantId
                 );
@@ -75,9 +75,9 @@ class ConversationController{
             }
         }
 
-        let participants: ParticipantInfoDTO[] | null;
+        let conversationDetail: ConversationDetailDTO | null;
         try{
-            participants = await ConversationService.getParticipants(conversation);
+            conversationDetail = await ConversationService.findById(conversation.id);
         }
         catch(err){
             return res.status(500).json({
@@ -88,28 +88,35 @@ class ConversationController{
         return res.json({
             status: "success",
             content: {
-                conversation,
-                participants
+                createdConversation: conversationDetail
             }
         });
     }
 
-    // public async getAllBySelf(req: JWTRequest<AuthPayload>, res: Response<StandardResponse>){
-    //     if(!req.auth){
-    //         return res.status(401).json({
-    //             status: "not authorized"
-    //         });
-    //     }
+    public async getAllBySelf(req: JWTRequest<AuthPayload>, res: Response<StandardResponse>){
+        if(!req.auth){
+            return res.status(401).json({
+                status: "not authorized"
+            });
+        }
 
-    //     try{
-            
-    //     }
-    //     catch(err){
-    //         return res.status(500).json({
-    //             status: "system error"
-    //         });
-    //     }
-    // }
+        try{
+            const conversations = await ConversationService.findsByUserId(req.auth.id);
+
+            return res.json({
+                status: "success",
+                content: {
+                    conversations
+                }
+            });
+        }
+        catch(err){
+            return res.status(500).json({
+                status: "system error",
+                content: err
+            });
+        }
+    }
 }
 
 export default ConversationController;

@@ -5,5 +5,6 @@ const conversationRouter = express.Router();
 const conversationController = new ConversationController();
 
 conversationRouter.post("/", conversationController.create);
+conversationRouter.get("/all", conversationController.getAllBySelf);
 
 export default conversationRouter;

@@ -1,18 +1,18 @@
-import { ConversationCreationDTO, ConversationDTO, UserDTO, ParticipantInfoDTO } from "../dto";
+import { Op } from "sequelize";
+import { ConversationCreationDTO, ConversationDTO, UserDTO, ParticipantInfoDTO, ConversationDetailDTO } from "../dto";
 import Conversation from "../model/Conversation";
+import Participant from "../model/Participant";
 import User from "../model/User";
 
 class ConversationService{
     public static async create(conversation: ConversationCreationDTO): Promise<ConversationDTO>{
         const createdConversation = await Conversation.create(conversation);
 
-        console.log(Object.getPrototypeOf(createdConversation));
-
         return createdConversation.get();
     }
 
-    public static async addParticipant(conversation: ConversationDTO, userOrUserId: string): Promise<ConversationDTO>;
-    public static async addParticipant(conversation: ConversationDTO, userOrUserId: UserDTO | string): Promise<ConversationDTO>{
+    public static async addParticipant(conversation: ConversationDTO, userOrUserId: string): Promise<void>;
+    public static async addParticipant(conversation: ConversationDTO, userOrUserId: UserDTO | string): Promise<void>{
         const conversationMapped = new Conversation(conversation);
         if(typeof userOrUserId === "string"){
             await conversationMapped.addParticipatedUser(userOrUserId);
@@ -22,58 +22,81 @@ class ConversationService{
             await conversationMapped.addParticipatedUser(userNeedAddMapped);
         }
 
-        return conversationMapped.get();
+        console.log(Object.getPrototypeOf(conversationMapped));
     }
 
-    public static async getParticipantsById(conversationId: string): Promise<ParticipantInfoDTO[] | null>{
+    public static async findById(id: string): Promise<ConversationDetailDTO | null>{
         const conversation = await Conversation.findOne({
             where: {
-                id: conversationId
-            }
+                id: id
+            },
+            include: [
+                {
+                    model: User,
+                    as: "Creator",
+                    attributes: ["id", "firstName", "lastName", "birthDay", "role"]
+                },
+                {
+                    model: User,
+                    as: "ParticipatedUsers",
+                    attributes: ["id", "firstName", "lastName", "birthDay", "role"],
+                    through: {
+                        attributes: []
+                    }
+                }
+            ]
         });
-        if(conversation !== null){
-            const participants = await conversation.getParticipatedUsers({
-                attributes: {
-                    exclude: ["email", "phone", "password", "token"]
-                }
-            });
 
-            return participants.map((participant) => {
-                return {
-                    ...participant.get(),
-                    Participant: undefined
-                }
-            });
+        return conversation === null ? null : {
+            id: conversation.id,
+            title: conversation.title,
+            createdAt: conversation.createdAt,
+            updatedAt: conversation.updatedAt,
+            Creator: conversation.Creator,
+            ParticipatedUsers: conversation.ParticipatedUsers
         }
-
-        return null;
     }
 
-    public static async getParticipants(conversation: ConversationDTO): Promise<ParticipantInfoDTO[]>{
-        const conversationMapped = new Conversation(conversation);
-        const participants = await conversationMapped.getParticipatedUsers({
-            attributes: {
-                exclude: ["email", "phone", "password", "token"]
-            }
-        });
+    public static async findsByUserId(userId: string): Promise<ConversationDetailDTO[]>{
+        const conversationParticipatedIds = (await Participant.findAll({
+            where: {
+                userId: userId
+            },
+            attributes: ["conversationId"]
+        })).map(participant => participant.conversationId as string);
 
-        return participants.map((participant) => {
-            return {
-                ...participant.get(),
-                Participant: undefined
-            }
-        });
-    }
-
-    public static async findsByUserId(userId: string): Promise<ConversationDTO[]>{
         const conversations = await Conversation.findAll({
             where: {
-                creatorId: userId
-            }
+                id: {
+                    [Op.in]: conversationParticipatedIds
+                }
+            },
+            include: [
+                {
+                    model: User,
+                    as: "Creator",
+                    attributes: ["id", "firstName", "lastName", "birthDay", "role"]
+                },
+                {
+                    model: User,
+                    as: "ParticipatedUsers",
+                    attributes: ["id", "firstName", "lastName", "birthDay", "role"],
+                    through: {
+                        attributes: []
+                    }
+                }
+            ]
         });
 
         return conversations.map((conversation) => {
-            return conversation.get();
+            return {
+                id: conversation.id,
+                title: conversation.title,
+                createdAt: conversation.createdAt,
+                updatedAt: conversation.updatedAt,
+                Creator: conversation.Creator,
+                ParticipatedUsers: conversation.ParticipatedUsers
+            }
         })
     }
 }
