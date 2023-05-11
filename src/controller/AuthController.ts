@@ -55,7 +55,7 @@ class AuthController{
             role: user.role
         });
         try{
-            UserService.updateWithToken(user.id, token);
+            await UserService.updateWithToken(user.id, token);
         }
         catch(err){
             return res.status(500).json({

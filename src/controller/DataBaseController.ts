@@ -95,6 +95,16 @@ class DataBaseController{
             });
             await conversation2.addParticipatedUser(users[0]);
             await conversation2.addParticipatedUser(users[1]);
+            await Message.create({
+                senderId: users[0].id,
+                content: "Hello B",
+                conversationId: conversation2.id
+            });
+            await Message.create({
+                senderId: users[1].id,
+                content: "Yes, Hello A",
+                conversationId: conversation2.id
+            });
             await conversation3.addParticipatedUser(users[0]);
             await conversation3.addParticipatedUser(users[2]);
         }

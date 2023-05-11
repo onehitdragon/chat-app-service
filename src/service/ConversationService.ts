@@ -42,7 +42,7 @@ class ConversationService{
                     as: "ParticipatedUsers",
                     attributes: ["id", "firstName", "lastName", "birthDay", "role"],
                     through: {
-                        attributes: []
+                        attributes: ["amountMessageNotRead"]
                     }
                 },
                 {
@@ -90,7 +90,7 @@ class ConversationService{
                     as: "ParticipatedUsers",
                     attributes: ["id", "firstName", "lastName", "birthDay", "role"],
                     through: {
-                        attributes: []
+                        attributes: ["amountMessageNotRead"]
                     }
                 },
                 {
@@ -103,6 +103,7 @@ class ConversationService{
         });
 
         return conversations.map((conversation) => {
+            //console.log(Object.getPrototypeOf(conversation.ParticipatedUsers[0]));
             return {
                 id: conversation.id,
                 title: conversation.title,
