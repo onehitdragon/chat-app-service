@@ -61,7 +61,7 @@ class ConversationService{
             updatedAt: conversation.updatedAt,
             Creator: conversation.Creator,
             ParticipatedUsers: conversation.ParticipatedUsers,
-            Messages: conversation.Messages
+            Messages: conversation.Messages.sort((m1, m2) => m1.createdAt.getTime() - m2.createdAt.getTime())
         }
     }
 
@@ -103,7 +103,6 @@ class ConversationService{
         });
 
         return conversations.map((conversation) => {
-            //console.log(Object.getPrototypeOf(conversation.ParticipatedUsers[0]));
             return {
                 id: conversation.id,
                 title: conversation.title,
@@ -111,7 +110,7 @@ class ConversationService{
                 updatedAt: conversation.updatedAt,
                 Creator: conversation.Creator,
                 ParticipatedUsers: conversation.ParticipatedUsers,
-                Messages: conversation.Messages
+                Messages: conversation.Messages.sort((m1, m2) => m1.createdAt.getTime() - m2.createdAt.getTime())
             }
         })
     }
