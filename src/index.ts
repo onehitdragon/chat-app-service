@@ -11,31 +11,39 @@ import { jwtSuccessHandleMiddleware } from "./middleware/jwtSuccessHandleMiddlew
 import userRouter from "./router/userRouter";
 import conversationRouter from "./router/conversationRouter";
 import messageRouter from "./router/messageRouter";
+import http from "http";
 
-const server = express();
+const app = express();
+const server = http.createServer(app);
 
 server.listen(12345, () => {
     console.log("Server listening on 12345...");
 });
 
 // middleware
-server.use(cors());
-server.use(express.json());
-server.use("/uploads", express.static("uploads"));
-server.use(
+app.use(cors());
+app.use(express.json());
+app.use("/uploads", express.static("uploads"));
+app.use(
     expressjwt({
         secret: process.env.SECRET_KEY || "",
         algorithms: ["HS256"]
     }).unless({
-        path: [/^\/api\/v1\/auth\/[a-z]+$/, "/uploads"]
+        path: [
+            /^\/api\/v1\/auth\/[a-z]+$/,
+            "/uploads"
+        ]
     }),
     jwtErrorHandleMiddleware,
     jwtSuccessHandleMiddleware
 );
 
 // route
-server.use("/api/v1/db", databaseRouter);
-server.use("/api/v1/auth", authRouter);
-server.use("/api/v1/user", userRouter);
-server.use("/api/v1/conversation", conversationRouter);
-server.use("/api/v1/message", messageRouter);
+app.use("/api/v1/db", databaseRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/conversation", conversationRouter);
+app.use("/api/v1/message", messageRouter);
+
+export { server }
+import "./socket/socket";
