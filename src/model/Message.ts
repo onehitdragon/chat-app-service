@@ -6,7 +6,7 @@ import Conversation from "./Conversation";
 class Message extends Model<InferAttributes<Message>, InferCreationAttributes<Message>>{
     declare id: CreationOptional<string>;
     declare content: string;
-    declare type: CreationOptional<"text" | "file">;
+    declare type: CreationOptional<"text" | "file" | "icon">;
     declare attachmentUrl: string | null;
     declare senderId: ForeignKey<string>;
     declare conversationId: ForeignKey<string>;
@@ -22,7 +22,7 @@ Message.init({
     },
     content: DataTypes.STRING,
     type: {
-        type: DataTypes.ENUM("text", "file"),
+        type: DataTypes.ENUM("text", "file", "icon"),
         defaultValue: "text"
     },
     attachmentUrl: {

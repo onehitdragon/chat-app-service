@@ -8,7 +8,7 @@ import { ForeignKeyConstraintError } from "sequelize";
 import fs from "fs";
 
 const createMessageBodySchema = z.object({
-    type: z.union([z.literal("text"), z.literal("file")]).default("text"),
+    type: z.union([z.literal("text"), z.literal("file"), z.literal("icon")]).default("text"),
     content: z.union([z.string().nonempty(), z.undefined()]),
     conversationId: z.string()
 });
@@ -31,7 +31,7 @@ class MessageController {
         }
         const body = validate.data;
 
-        if(body.type === "text" && typeof body.content === "undefined"){
+        if((body.type === "text" || body.type === "icon") && typeof body.content === "undefined"){
             return res.status(400).json({
                 status: "missing",
                 msg: "Require content field when type = 'text'"
