@@ -24,6 +24,7 @@ server.listen(12345, () => {
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
+app.use("/icons", express.static("icons"));
 app.use(
     expressjwt({
         secret: process.env.SECRET_KEY || "",

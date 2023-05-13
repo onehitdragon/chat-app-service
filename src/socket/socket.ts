@@ -3,7 +3,7 @@ import { server } from "..";
 import { SocketClient } from ".";
 import { MessageInfoDTO } from "../dto";
 
-console.log("Setup socker...");
+console.log("Setup socket...");
 const io = new Server(server, {
     cors: {
         origin: "*"
