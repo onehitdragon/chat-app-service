@@ -32,7 +32,8 @@ app.use(
     }).unless({
         path: [
             /^\/api\/v1\/auth\/[a-z]+$/,
-            "/uploads"
+            "/uploads",
+            "/peerjs"
         ]
     }),
     jwtErrorHandleMiddleware,
@@ -48,3 +49,4 @@ app.use("/api/v1/message", messageRouter);
 
 export { server }
 import "./socket/socket";
+import "./p2p/peerServer";
